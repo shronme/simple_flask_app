@@ -1,0 +1,7 @@
+__pycache__
+.terraform
+terraform.*
+cf-app-*
+.pyc
+.vscode
+

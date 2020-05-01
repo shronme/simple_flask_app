@@ -1,0 +1,53 @@
+{
+    "AWSEBDockerrunVersion": 2,
+    "volumes": [
+      {
+        "name": "ecs_instance_logs",
+        "host": {
+            "sourcePath": "/var/log/containers/cf-core"
+        }
+      },
+      {
+        "name": "cf-core",
+        "host": {
+          "sourcePath": "/home/code/"
+        }
+      }  
+    ],
+    "containerDefinitions": [
+      {
+        "name": "cf-core",
+        "image": "ronbckbn/cf_app",
+        "memory": 128,
+        "essential": "true",
+        "portMappings": [
+            {
+                "hostPort": 80,
+                "containerPort": 80
+            },
+            {
+                "hostPort": 443,
+                "containerPort": 443
+            }
+        ],
+        "mountPoints": [
+          {
+              "sourceVolume": "ecs_instance_logs",
+              "containerPath": "/var/log/supervisor/"
+          },
+          {
+              "sourceVolume": "ecs_instance_logs",
+              "containerPath": "/var/log/nginx/"
+          }
+        ],
+        "logConfiguration": {
+          "logDriver": "awslogs",
+          "options": {
+              "awslogs-group": "cf-app-servers",
+              "awslogs-region": "eu-west-1",
+              "awslogs-stream-prefix": "app-container"
+          }
+        }
+      }
+    ]
+  }
